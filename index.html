@@ -1,0 +1,1761 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบโปรแกรมออนไลน์</title>
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&family=Sarabun:wght@300;400;500&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- LIFF SDK -->
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+   <!-- ICONWEB -->
+  <link rel="shortcut icon" type="image/x-icon" href="https://i.im.ge/2022/12/18/dnNRqa.2564-01-03-094436.png">
+  <link rel="icon" type="image/x-icon" sizes="32x32" href="https://i.im.ge/2022/12/18/dnNRqa.2564-01-03-094436.png">
+  <link rel="icon" type="image/x-icon" sizes="16x16" href="https://i.im.ge/2022/12/18/dnNRqa.2564-01-03-094436.png">
+  <link rel="apple-touch-icon-precomposed" href="https://i.im.ge/2022/12/18/dnNRqa.2564-01-03-094436.png">
+  
+  <style>
+    body, h1, h2, h3, h4, h5, h6 {
+      font-family: 'Kanit', 'Sarabun', sans-serif;
+    }
+    
+    .card-hover {
+      transition: all 0.3s ease;
+    }
+    
+    .card-hover:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .modal-enter {
+      animation: modalFadeIn 0.3s ease-out;
+    }
+    
+    .modal-exit {
+      animation: modalFadeOut 0.3s ease-out;
+    }
+    
+    @keyframes modalFadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    
+    @keyframes modalFadeOut {
+      from {
+        opacity: 1;
+        transform: scale(1);
+      }
+      to {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+    }
+    
+    .countdown-number {
+      animation: pulse 1s infinite;
+    }
+    
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    
+    .new-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: linear-gradient(45deg, #e53e3e, #c53030);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: bold;
+      padding: 4px 10px;
+      border-radius: 12px;
+      z-index: 10;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      animation: newPulse 2s infinite;
+    }
+    
+    @keyframes newPulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+    
+    /* Custom Dark Mode Scrollbar */
+    .dark-scrollbar::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    .dark-scrollbar::-webkit-scrollbar-track {
+      background: #374151;
+      border-radius: 4px;
+    }
+    
+    .dark-scrollbar::-webkit-scrollbar-thumb {
+      background: #4B5563;
+      border-radius: 4px;
+    }
+    
+    .dark-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #6B7280;
+    }
+    
+    /* Light Mode Scrollbar */
+    .light-scrollbar::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    .light-scrollbar::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+    }
+    
+    .light-scrollbar::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 4px;
+    }
+    
+    .light-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #a1a1a1;
+    }
+    
+    /* Dark Mode Transition */
+    body, .modal-content, .footer-content {
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .promptpay-qr {
+      border: 2px solid #e5e7eb;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      background: white;
+      width: 280px;
+      height: 280px;
+      margin: 0 auto;
+    }
+    
+    /* Profile section */
+    .profile-pic {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid #4299e1;
+      object-fit: cover;
+    }
+    
+    /* Share button */
+    .share-button {
+      background: linear-gradient(45deg, #4c51bf, #667eea);
+      color: white;
+      padding: 10px 16px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+    }
+    
+    .share-button:hover {
+      background: linear-gradient(45deg, #667eea, #4c51bf);
+      transform: translateY(-2px);
+    }
+    
+    /* Course image container */
+    .course-image-container {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
+    
+    .course-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    
+    .card-hover:hover .course-image {
+      transform: scale(1.05);
+    }
+    
+    /* Course details container */
+    .course-details-container {
+      max-height: 140px;
+      overflow-y: auto;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .course-image-container {
+        height: 180px;
+      }
+      
+      .course-details-container {
+        max-height: 120px;
+      }
+    }
+    
+    @media (max-width: 640px) {
+      .course-image-container {
+        height: 100%;
+      }
+      
+      .course-details-container {
+        max-height: 100px;
+      }
+    }
+    
+    /* Line clamp for course titles */
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    /* Search box */
+    .search-box {
+      transition: all 0.3s ease;
+    }
+    
+    .search-box:focus {
+      box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+    }
+    
+    /* Category filter */
+    .category-filter {
+      transition: all 0.2s ease;
+    }
+    
+    .category-filter.active {
+      background-color: #3b82f6;
+      color: white;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-900 text-gray-100">
+  <!-- Navbar -->
+  <nav class="bg-gradient-to-r from-gray-800 to-gray-900 text-white shadow-lg border-b border-gray-700">
+    <div class="container mx-auto px-4 py-3">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
+        <div class="flex items-center space-x-2">
+          <i class="fas fa-bullhorn text-xl text-blue-400"></i>
+          <h1 class="text-xl font-semibold">ThaiFriendMLM</h1>
+        </div>
+        <div class="flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-4 w-full md:w-auto">
+          <div class="flex space-x-4">
+            <a href="#" class="hover:text-blue-300 transition-colors">หน้าแรก</a>
+            <a href="#" class="hover:text-blue-300 transition-colors">โปรแกรมทั้งหมด</a>
+            <a href="#" class="hover:text-blue-300 transition-colors">เกี่ยวกับเรา</a>
+          </div>
+          
+          <!-- LIFF Profile Section -->
+          <div id="liffProfile" class="hidden md:flex items-center space-x-3 bg-gray-700 bg-opacity-70 rounded-full pl-2 pr-4 py-1">
+            <img id="profilePicture" class="profile-pic" src="" alt="Profile Picture">
+            <div class="flex flex-col">
+              <span id="displayName" class="text-sm font-medium"></span>
+              <span id="userId" class="text-xs text-gray-400 truncate max-w-[120px]"></span>
+            </div>
+          </div>
+          
+          <!-- Login/Logout Button -->
+          <button id="liffLoginButton" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center">
+            <i class="fab fa-line mr-2"></i>ลงชื่อเข้าใช้ LINE
+          </button>
+          
+          <button id="themeToggle" class="p-2 rounded-full bg-gray-700 hover:bg-gray-600 transition-colors">
+            <i class="fas fa-moon" id="themeIcon"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ส่วนของการแสดงข้อมูล -->
+  <div class="container mx-auto px-4 py-8">
+    <div class="mb-8">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 space-y-4 md:space-y-0">
+        <div>
+          <h1 class="text-3xl font-bold text-white mb-2 flex items-center">
+            <i class="fas fa-bullhorn text-blue-400 mr-3 fa-bounce"></i>คอร์สเรียนออนไลน์ทั้งหมด
+          </h1>
+          <p class="text-gray-400">เลือกคอร์สที่สนใจและเริ่มเรียนได้ทันที</p>
+        </div>
+        <div id="shareAllButtonContainer" class="hidden">
+          <button id="shareAllButton" class="share-button">
+            <i class="fas fa-share-alt mr-2"></i>แชร์คอร์สทั้งหมด
+          </button>
+        </div>
+      </div>
+      
+      <!-- Search and Filter Section -->
+      <div class="mb-8 bg-gray-800 rounded-xl p-4 shadow-lg">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <!-- Search Box -->
+          <div class="md:col-span-2">
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i class="fas fa-search text-gray-500"></i>
+              </div>
+              <input 
+                type="text" 
+                id="courseSearch" 
+                placeholder="ค้นหาคอร์สเรียน..." 
+                class="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 search-box"
+              >
+            </div>
+          </div>
+          
+          <!-- Category Filter -->
+          <div>
+            <select id="categoryFilter" class="w-full py-3 px-4 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500">
+              <option value="all">หมวดหมู่ทั้งหมด</option>
+              <option value="basic">Line Chatbot</option>
+              <option value="intermediate">Google App Script</option>
+              <option value="advanced">Website</option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- Category Quick Filters -->
+        <div class="flex flex-wrap gap-2">
+          <button class="category-filter bg-gray-700 hover:bg-gray-600 text-gray-300 px-4 py-2 rounded-lg transition-colors" data-category="all">
+            ทั้งหมด
+          </button>
+          <button class="category-filter bg-gray-700 hover:bg-gray-600 text-gray-300 px-4 py-2 rounded-lg transition-colors" data-category="basic">
+            พื้นฐาน
+          </button>
+          <button class="category-filter bg-gray-700 hover:bg-gray-600 text-gray-300 px-4 py-2 rounded-lg transition-colors" data-category="intermediate">
+            ปานกลาง
+          </button>
+          <button class="category-filter bg-gray-700 hover:bg-gray-600 text-gray-300 px-4 py-2 rounded-lg transition-colors" data-category="advanced">
+            ขั้นสูง
+          </button>
+        </div>
+      </div>
+      
+      <!-- Course Count -->
+      <div class="mb-4 flex justify-between items-center">
+        <p id="courseCount" class="text-gray-400">กำลังโหลดคอร์ส...</p>
+        <div class="flex items-center space-x-2">
+          <span class="text-gray-400">แสดง:</span>
+          <select id="itemsPerPageSelect" class="bg-gray-800 border border-gray-700 rounded-lg px-3 py-1 text-white">
+            <option value="8">8 โปรแกรม/หน้า</option>
+            <option value="12">12 โปรแกรม/หน้า</option>
+            <option value="16">16 โปรแกรม/หน้า</option>
+          </select>
+        </div>
+      </div>
+      
+      <!-- Courses Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="card-container">
+        <!-- ที่จะแสดงการ์ดคอร์ส -->
+      </div>
+      
+      <!-- Loading State -->
+      <div id="loadingContainer" class="text-center py-12">
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
+        <p class="text-gray-400">กำลังโหลดระบบโปรแกรม...</p>
+      </div>
+      
+      <!-- Empty State -->
+      <div id="emptyContainer" class="hidden text-center py-12">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-800 text-gray-500 mb-4">
+          <i class="fas fa-book-open text-2xl"></i>
+        </div>
+        <h3 class="text-xl font-bold text-white mb-2">ไม่พบระบบโปรแกรม</h3>
+        <p class="text-gray-400 mb-6">ไม่มีระบบโปรแกรมที่ตรงกับการค้นหาของคุณ</p>
+      </div>
+      
+      <!-- Pagination -->
+      <div class="mt-12" id="pagination-container">
+        <!-- ที่จะแสดงการแบ่งหน้า -->
+      </div>
+    </div>
+  </div>
+  
+  <!-- QR Code Modal -->
+  <div id="qrModal" class="fixed inset-0 z-50 overflow-y-auto hidden">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <!-- Background overlay -->
+      <div id="modalBackdrop" class="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity"></div>
+      
+      <!-- Modal panel -->
+      <div class="inline-block align-bottom bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full modal-enter">
+        <div class="bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+          <div class="sm:flex sm:items-start">
+            <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-900 sm:mx-0 sm:h-10 sm:w-10">
+              <i class="fas fa-qrcode text-blue-400"></i>
+            </div>
+            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+              <h3 class="text-lg leading-6 font-medium text-white" id="modalTitle">
+                สแกน QR Code เพื่อชำระเงินด้วย PromptPay
+              </h3>
+              <div class="mt-4">
+                <!-- Countdown Timer -->
+                <div class="mb-6 text-center">
+                  <p class="text-gray-300 mb-2">กรุณาชำระเงินภายใน</p>
+                  <div class="flex justify-center space-x-4">
+                    <div class="text-center">
+                      <div class="bg-blue-900 text-blue-200 rounded-lg py-2 px-3 text-2xl font-bold countdown-number" id="countdownMinutes">05</div>
+                      <div class="text-xs text-gray-400 mt-1">นาที</div>
+                    </div>
+                    <div class="text-center">
+                      <div class="bg-blue-900 text-blue-200 rounded-lg py-2 px-3 text-2xl font-bold countdown-number" id="countdownSeconds">00</div>
+                      <div class="text-xs text-gray-400 mt-1">วินาที</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Payment Details -->
+                <div class="mb-6 bg-gray-700 p-4 rounded-lg">
+                  <div class="grid grid-cols-2 gap-3 text-sm mb-4">
+                    <div class="text-right text-gray-400">ชื่อโปรแกรม:</div>
+                    <div class="text-white font-medium" id="courseNameDetail">-</div>
+                    <div class="text-right text-gray-400">จำนวนเงิน:</div>
+                    <div class="text-green-400 font-medium" id="paymentAmountDetail">-</div>
+                    <div class="text-right text-gray-400">เลข PromptPay:</div>
+                    <div class="text-blue-300 font-medium">0835260186</div>
+                    <div class="text-right text-gray-400">เวลาหมดอายุ:</div>
+                    <div class="text-yellow-300 font-medium" id="expireTimeDetail">-</div>
+                  </div>
+                </div>
+                
+                <!-- QR Code Container -->
+                <div class="flex justify-center mb-6">
+                  <div class="promptpay-qr">
+                    <img id="promptpayImage" class="w-full h-full object-contain" 
+                         src="https://promptpay.io/0835260186/500.png" 
+                         alt="PromptPay QR Code">
+                  </div>
+                </div>
+                
+                <p class="text-sm text-gray-400 mb-4 text-center">
+                  <i class="fas fa-info-circle mr-2"></i>สแกน QR Code ด้านบนด้วยแอปธนาคารเพื่อชำระเงินผ่านระบบ PromptPay
+                </p>
+                
+                <!-- Bank Account Details -->
+                <div class="bg-gray-700 p-4 rounded-lg mb-4">
+                  <h4 class="font-medium text-white mb-3 text-center">
+                    <i class="fas fa-university mr-2"></i>ช่องทางการชำระเงินอื่นๆ
+                  </h4>
+                  <div class="space-y-2">
+                    <div class="flex items-center justify-between">
+                      <span class="text-gray-300">ธนาคารกสิกรไทย(kbank)</span>
+                      <span class="text-white font-medium">2151233778</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                      <span class="text-gray-300">ชื่อบัญชี</span>
+                      <span class="text-white font-medium">นายกมนทัต นวลนะลา</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="bg-yellow-900 border-l-4 border-yellow-600 p-4">
+                  <div class="flex">
+                    <div class="flex-shrink-0">
+                      <i class="fas fa-exclamation-triangle text-yellow-400"></i>
+                    </div>
+                    <div class="ml-3">
+                      <p class="text-sm text-yellow-300">
+                        กรุณาชำระเงินภายใน <span id="expireTime">5 นาที</span> และส่งหลักฐานการชำระเงินมาที่ไลน์ @692ajmyz
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-gray-900 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <button type="button" id="closeModal" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-700 text-base font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
+            <i class="fas fa-times mr-2"></i>ปิด
+          </button>
+          <button type="button" id="confirmPaymentBtn" class="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-700 text-base font-medium text-white hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+            <i class="fas fa-check mr-2"></i>แจ้งชำระเงินแล้ว
+          </button>
+          <button type="button" id="shareCourseButton" class="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-700 text-base font-medium text-white hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+            <i class="fas fa-share-alt mr-2"></i>แชร์โปรแกรมนี้
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="text-center lg:text-left bg-gray-800 text-gray-300 border-t border-gray-700">
+    <!-- Section: Social media -->
+    <section class="flex flex-col lg:flex-row justify-center lg:justify-between items-center p-6 border-b border-gray-700">
+      <!-- Left -->
+      <div class="mb-4 lg:mb-0 lg:mr-5 hidden lg:block">
+        <span class="font-medium text-gray-300">ข้อมูลติดต่อ</span>
+      </div>
+      <!-- Left -->
+
+      <!-- Right -->
+      <div class="flex space-x-4">
+        <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+        <a href="#" class="text-gray-400 hover:text-blue-300 transition-colors">
+          <i class="fab fa-twitter"></i>
+        </a>
+        <a href="#" class="text-gray-400 hover:text-red-400 transition-colors">
+          <i class="fab fa-google"></i>
+        </a>
+        <a href="#" class="text-gray-400 hover:text-pink-400 transition-colors">
+          <i class="fab fa-instagram"></i>
+        </a>
+        <a href="#" class="text-gray-400 hover:text-blue-500 transition-colors">
+          <i class="fab fa-linkedin"></i>
+        </a>
+        <a href="#" class="text-gray-400 hover:text-gray-200 transition-colors">
+          <i class="fab fa-github"></i>
+        </a>
+      </div>
+      <!-- Right -->
+    </section>
+    <!-- Section: Social media -->
+
+    <!-- Section: Links  -->
+    <section class="py-8">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <!-- Grid column 1 -->
+          <div class="mb-8 md:mb-0">
+            <!-- Content -->
+            <h6 class="text-lg font-bold uppercase mb-4 flex items-center text-white">
+              <i class="fas fa-gem mr-3 text-blue-400"></i>ThaiFriendMLM
+            </h6>
+            <p class="text-gray-400">
+              สอนการใช้งาน AppScript และ Linebot ผ่านช่องทาง Online
+            </p>
+          </div>
+          <!-- Grid column -->
+
+          <!-- Grid column 2 -->
+          <div class="mb-8 md:mb-0">
+            <!-- Links -->
+            <h6 class="text-lg font-bold uppercase mb-4 text-white">
+              สินค้าแนะนำ
+            </h6>
+            <ul class="space-y-2">
+              <li><a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">คอร์ส AppScript พื้นฐาน</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">คอร์ส Line Bot Development</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">คอร์ส Web Development</a></li>
+            </ul>
+          </div>
+          <!-- Grid column -->
+
+          <!-- Grid column 3 -->
+          <div class="mb-8 md:mb-0">
+            <!-- Links -->
+            <h6 class="text-lg font-bold uppercase mb-4 text-white">
+              สินค้าขายดี
+            </h6>
+            <ul class="space-y-2">
+              <li><a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">คอร์ส AppScript ขั้นสูง</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">คอร์ส Automation ด้วย Google Apps</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">คอร์ส Integration API</a></li>
+            </ul>
+          </div>
+          <!-- Grid column -->
+
+          <!-- Grid column 4 -->
+          <div class="mb-8 md:mb-0">
+            <!-- Links -->
+            <h6 class="text-lg font-bold uppercase mb-4 text-white">ที่อยู่</h6>
+            <p class="flex items-start mb-3">
+              <i class="fas fa-home mt-1 mr-3 text-gray-500"></i>
+              <span class="text-gray-400">จ.เชียงราย</span>
+            </p>
+            <p class="flex items-start mb-3">
+              <i class="fas fa-envelope mt-1 mr-3 text-gray-500"></i>
+              <a href="mailto:teerapong.infomation@gmail.com" class="text-gray-400 hover:text-blue-400 transition-colors">
+                teerapong.infomation@gmail.com
+              </a>
+            </p>
+            <p class="flex items-start mb-3">
+              <i class="fas fa-phone mt-1 mr-3 text-gray-500"></i>
+              <a href="tel:0857243350" class="text-gray-400 hover:text-blue-400 transition-colors">
+                0857243350
+              </a>
+            </p>
+            <p class="flex items-start">
+              <i class="fas fa-print mt-1 mr-3 text-gray-500"></i>
+              <span class="text-gray-400">@692ajmyz</span>
+            </p>
+          </div>
+          <!-- Grid column -->
+        </div>
+      </div>
+    </section>
+    <!-- Section: Links  -->
+
+    <!-- Copyright -->
+    <div class="text-center p-6 bg-gray-900">
+      <span class="text-gray-400">© 2026 Copyright:</span>
+      <a class="font-semibold text-blue-400 hover:text-blue-300 transition-colors" href="https://lin.ee/PH5xqYj">
+        พัฒนาโดย: ThaiFriendMLM
+      </a>
+    </div>
+    <!-- Copyright -->
+  </footer>
+
+  <script>
+    // ตัวแปรและค่าคงที่
+    let cardsPerPage = 8;
+    let currentPage = 1;
+    let countdownTimer;
+    let countdownTime = 5 * 60;
+    let allCourses = [];
+    let filteredCourses = [];
+    let latestCoursesCount = 4;
+    let darkMode = true;
+    let currentCourseData = null;
+    let liffInitialized = false;
+    let userProfile = null;
+    
+    // LIFF App ID
+    const liffId = "2010375387-qaswMBwU"   //แก้ไขจุดที่1;
+    
+    // ฟังก์ชันเริ่มต้น LIFF
+    async function initializeLiff() {
+      try {
+        await liff.init({ liffId: liffId });
+        liffInitialized = true;
+        console.log("LIFF initialized successfully");
+        
+        if (liff.isLoggedIn()) {
+          await fetchUserProfile();
+        } else {
+          // แสดงปุ่มล็อกอิน
+          document.getElementById('liffLoginButton').classList.remove('hidden');
+        }
+      } catch (error) {
+        console.error("LIFF initialization failed", error);
+        // ถ้า LIFF ใช้ไม่ได้ ให้ซ่อนปุ่มล็อกอิน
+        document.getElementById('liffLoginButton').classList.add('hidden');
+      }
+    }
+    
+    // ฟังก์ชันดึงข้อมูลผู้ใช้
+    async function fetchUserProfile() {
+      try {
+        const profile = await liff.getProfile();
+        userProfile = profile;
+        
+        // แสดงข้อมูลผู้ใช้ใน Navbar
+        document.getElementById('liffProfile').classList.remove('hidden');
+        document.getElementById('liffLoginButton').classList.add('hidden');
+        
+        document.getElementById('profilePicture').src = profile.pictureUrl;
+        document.getElementById('displayName').textContent = profile.displayName;
+        document.getElementById('userId').textContent = `ID: ${profile.userId.substring(0, 10)}...`;
+        
+        console.log("User profile loaded:", profile.displayName);
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+      }
+    }
+    
+    // ฟังก์ชันล็อกอิน
+    function loginToLine() {
+      if (liffInitialized) {
+        liff.login();
+      } else {
+        console.error("LIFF not initialized");
+        alert("ไม่สามารถเชื่อมต่อกับ LINE ได้");
+      }
+    }
+    
+    // ฟังก์ชันล็อกเอ้าท์
+    function logoutFromLine() {
+      if (liffInitialized && liff.isLoggedIn()) {
+        liff.logout();
+        window.location.reload();
+      }
+    }
+    
+    // ฟังก์ชันแชร์คอร์สด้วย Flex Message
+    function shareCourse(courseData) {
+      if (!liffInitialized) {
+        alert("กรุณาลงชื่อเข้าใช้ LINE ก่อนใช้งานฟังก์ชันแชร์");
+        return;
+      }
+      
+      if (!liff.isLoggedIn()) {
+        alert("กรุณาลงชื่อเข้าใช้ LINE ก่อนใช้งานฟังก์ชันแชร์");
+        return;
+      }
+      
+      // กำหนดสีแบดจ์ตามหมวดหมู่
+      let badgeColor = "#3B82F6"; // สีน้ำเงินสำหรับทั่วไป
+      let badgeText = "ทั่วไป";
+      
+      if (courseData.category) {
+        if (courseData.category === 'advanced') {
+          badgeColor = "#DC2626";
+          badgeText = "ขั้นสูง";
+        } else if (courseData.category === 'intermediate') {
+          badgeColor = "#D97706";
+          badgeText = "ปานกลาง";
+        } else if (courseData.category === 'basic') {
+          badgeColor = "#059669";
+          badgeText = "พื้นฐาน";
+        }
+      }
+      
+      // ดึงราคาจากข้อมูล
+      const priceMatch = courseData.price ? courseData.price.match(/\d+/) : null;
+      const coursePrice = priceMatch ? priceMatch[0] : '500';
+      
+      // ใช้รูปภาพเริ่มต้นหากไม่มี
+      const courseImage = courseData.linkimage || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80';
+      
+      // สร้าง Flex Message
+      const flexMessage = {
+        type: "flex",
+        altText: `ระบบโปรแกรม: ${courseData.coursename} - ${courseData.price}`,
+        contents: {
+          type: "bubble",
+          size: "kilo",
+          hero: {
+            type: "image",
+            url: courseImage,
+            size: "full",
+            aspectRatio: "1:1",
+            aspectMode: "cover",
+            backgroundColor: "#1F2937"
+          },
+          body: {
+            type: "box",
+            layout: "vertical",
+            contents: [
+              {
+                type: "text",
+                text: courseData.coursename,
+                weight: "bold",
+                size: "lg",
+                color: "#FFFFFF",
+                wrap: true,
+                maxLines: 2,
+                margin: "none"
+              },
+              {
+                type: "box",
+                layout: "baseline",
+                contents: [
+                  {
+                    type: "text",
+                    text: "💰",
+                    size: "sm",
+                    flex: 0
+                  },
+                  {
+                    type: "text",
+                    text: courseData.price,
+                    weight: "bold",
+                    size: "xl",
+                    color: "#10B981",
+                    flex: 5,
+                    wrap: true
+                  }
+                ],
+                spacing: "sm",
+                margin: "md"
+              },
+              {
+                type: "box",
+                layout: "baseline",
+                contents: [
+                  {
+                    type: "text",
+                    text: "⭐",
+                    size: "sm",
+                    flex: 0
+                  },
+                  {
+                    type: "text",
+                    text: courseData.rating || "4.5",
+                    size: "sm",
+                    color: "#FBBF24",
+                    flex: 0
+                  },
+                  {
+                    type: "text",
+                    text: "•",
+                    size: "sm",
+                    color: "#6B7280",
+                    flex: 0,
+                    margin: "sm"
+                  },
+                  {
+                    type: "text",
+                    text: badgeText,
+                    size: "sm",
+                    color: badgeColor,
+                    weight: "bold",
+                    flex: 0
+                  }
+                ],
+                spacing: "sm",
+                margin: "sm"
+              },
+              {
+                type: "box",
+                layout: "vertical",
+                contents: [
+                  {
+                    type: "text",
+                    text: courseData.details ? 
+                      (courseData.details.split('\n')[0]?.substring(0, 60) || "ระบบโปรแกรมสำหรับนักธุรกิจเครือข่าย") : 
+                      "ระบบโปรแกรมสำหรับนักธุรกิจเครือข่าย",
+                    size: "sm",
+                    color: "#D1D5DB",
+                    wrap: true,
+                    margin: "md",
+                    maxLines: 2
+                  }
+                ],
+                margin: "md"
+              }
+            ],
+            backgroundColor: "#1F2937",
+            paddingAll: "lg"
+          },
+          footer: {
+            type: "box",
+            layout: "vertical",
+            contents: [
+              {
+                type: "button",
+                action: {
+                  type: "uri",
+                  label: "ดูรายละเอียด",
+                  uri: window.location.href
+                },
+                style: "primary",
+                color: "#3B82F6",
+                height: "sm"
+              },
+              {
+                type: "button",
+                action: {
+                  type: "uri",
+                  label: "สนับสนุนคอร์ส",
+                  uri: `https://line.me/R/oaMessage/@692ajmyz?text=${encodeURIComponent(`สนับสนุนคอร์ส: ${courseData.coursename}`)}`
+                },
+                style: "secondary",
+                color: "#10B981",
+                margin: "sm",
+                height: "sm"
+              }
+            ],
+            paddingAll: "md",
+            backgroundColor: "#111827"
+          }
+        }
+      };
+      
+      // ใช้ Share Target Picker
+      if (liff.isApiAvailable('shareTargetPicker')) {
+        liff.shareTargetPicker([flexMessage])
+          .then(res => {
+            if (res && res.status === 'success') {
+              console.log('แชร์สำเร็จแล้ว');
+            } else {
+              console.log('ผู้ใช้ยกเลิกการแชร์');
+            }
+          })
+          .catch(error => {
+            console.error('เกิดข้อผิดพลาดในการแชร์:', error);
+            // ถ้าแชร์ Flex Message ล้มเหลว ให้ใช้ข้อความธรรมดาแทน
+            shareCourseWithText(courseData);
+          });
+      } else {
+        // ถ้าใช้ Flex Message ไม่ได้ ให้ใช้ข้อความธรรมดา
+        shareCourseWithText(courseData);
+      }
+    }
+    
+    // ฟังก์ชันแชร์คอร์สด้วยข้อความธรรมดา (สำรอง)
+    function shareCourseWithText(courseData) {
+      const shareMessage = `
+📚 คอร์สเรียนออนไลน์ที่น่าสนใจ!
+
+📌 ชื่อคอร์ส: ${courseData.coursename}
+💰 ราคา: ${courseData.price}
+${courseData.details ? `📝 รายละเอียด: ${courseData.details.substring(0, 100)}...` : ''}
+
+🔗 ดูรายละเอียดเพิ่มเติมและสมัครเรียนได้ที่:
+${window.location.href}
+
+#คอร์สออนไลน์ #เรียนออนไลน์ #ครบเครื่องเรื่องไอที
+      `.trim();
+      
+      liff.shareTargetPicker([
+        {
+          type: 'text',
+          text: shareMessage
+        }
+      ])
+      .then(res => {
+        if (res && res.status === 'success') {
+          console.log('แชร์สำเร็จแล้ว');
+        } else {
+          console.log('ผู้ใช้ยกเลิกการแชร์');
+        }
+      })
+      .catch(error => {
+        console.error('เกิดข้อผิดพลาดในการแชร์:', error);
+        alert("ฟังก์ชันแชร์ไม่สามารถใช้งานได้ในขณะนี้");
+      });
+    }
+    
+    // ฟังก์ชันแชร์คอร์สทั้งหมด
+    function shareAllCourses() {
+      if (!liffInitialized || !liff.isLoggedIn()) {
+        alert("กรุณาลงชื่อเข้าใช้ LINE ก่อนใช้งานฟังก์ชันแชร์");
+        return;
+      }
+      
+      const currentDate = new Date().toLocaleDateString('th-TH');
+      
+      // สร้างรายการคอร์สแบบย่อ (จำกัดที่ 5 คอร์สแรก)
+      const courseListItems = allCourses.slice(0, 5).map((course, index) => ({
+        type: "box",
+        layout: "vertical",
+        contents: [
+          {
+            type: "text",
+            text: `${index + 1}. ${course.coursename}`,
+            size: "sm",
+            color: "#E5E7EB",
+            wrap: true,
+            maxLines: 2
+          },
+          {
+            type: "box",
+            layout: "baseline",
+            contents: [
+              {
+                type: "text",
+                text: "💰 ",
+                size: "xs",
+                color: "#10B981",
+                flex: 0
+              },
+              {
+                type: "text",
+                text: course.price,
+                size: "xs",
+                color: "#10B981",
+                weight: "bold",
+                flex: 1
+              },
+              {
+                type: "filler"
+              },
+              {
+                type: "text",
+                text: "⭐ ",
+                size: "xs",
+                color: "#FBBF24",
+                flex: 0
+              },
+              {
+                type: "text",
+                text: course.rating || "4.5",
+                size: "xs",
+                color: "#FBBF24",
+                flex: 0
+              }
+            ],
+            margin: "xs"
+          }
+        ],
+        spacing: "xs",
+        margin: "sm",
+        paddingTop: "sm",
+        paddingBottom: "sm",
+        paddingStart: "md",
+        paddingEnd: "md",
+        backgroundColor: "#1F2937",
+        cornerRadius: "sm"
+      }));
+      
+      // ถ้ามีคอร์สมากกว่า 5 ให้เพิ่มข้อความแสดงจำนวนคอร์สทั้งหมด
+      if (allCourses.length > 5) {
+        courseListItems.push({
+          type: "text",
+          text: `...และอีก ${allCourses.length - 5} คอร์ส`,
+          size: "xs",
+          color: "#9CA3AF",
+          align: "center",
+          margin: "sm"
+        });
+      }
+      
+      // สร้าง Flex Message สำหรับคอร์สทั้งหมด
+      const flexMessage = {
+        type: "flex",
+        altText: `คอร์สเรียนออนไลน์ทั้งหมดจาก "ครบเครื่อง เรื่องไอที" - รวม ${allCourses.length} คอร์ส`,
+        contents: {
+          type: "bubble",
+          size: "giga",
+          hero: {
+            type: "image",
+            url: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+            size: "full",
+            aspectRatio: "20:13",
+            aspectMode: "cover",
+            backgroundColor: "#1F2937"
+          },
+          body: {
+            type: "box",
+            layout: "vertical",
+            contents: [
+              {
+                type: "text",
+                text: "🎓 คอร์สเรียนออนไลน์ทั้งหมด",
+                weight: "bold",
+                size: "xl",
+                color: "#FFFFFF",
+                wrap: true
+              },
+              {
+                type: "text",
+                text: "จากครบเครื่อง เรื่องไอที",
+                size: "md",
+                color: "#D1D5DB",
+                wrap: true,
+                margin: "sm"
+              },
+              {
+                type: "separator",
+                margin: "lg"
+              },
+              {
+                type: "box",
+                layout: "vertical",
+                contents: [
+                  {
+                    type: "text",
+                    text: `📊 รวมทั้งหมด ${allCourses.length} คอร์ส`,
+                    size: "sm",
+                    color: "#9CA3AF",
+                    margin: "sm"
+                  },
+                  {
+                    type: "text",
+                    text: `📅 อัพเดทล่าสุด: ${currentDate}`,
+                    size: "sm",
+                    color: "#9CA3AF",
+                    margin: "xs"
+                  }
+                ],
+                margin: "lg"
+              },
+              {
+                type: "separator",
+                margin: "lg"
+              },
+              {
+                type: "text",
+                text: "📚 คอร์สแนะนำ",
+                size: "md",
+                color: "#FFFFFF",
+                weight: "bold",
+                margin: "lg"
+              },
+              {
+                type: "box",
+                layout: "vertical",
+                contents: courseListItems,
+                margin: "sm"
+              }
+            ],
+            backgroundColor: "#1F2937",
+            paddingAll: "lg"
+          },
+          footer: {
+            type: "box",
+            layout: "vertical",
+            contents: [
+              {
+                type: "button",
+                action: {
+                  type: "uri",
+                  label: "ดูคอร์สทั้งหมด",
+                  uri: window.location.href
+                },
+                style: "primary",
+                color: "#3B82F6",
+                height: "sm"
+              },
+              {
+                type: "button",
+                action: {
+                  type: "uri",
+                  label: "ติดต่อสอบถาม",
+                  uri: "https://line.me/R/oaMessage/xxxxxxxx"
+                },
+                style: "secondary",
+                color: "#10B981",
+                margin: "sm",
+                height: "sm"
+              }
+            ],
+            paddingAll: "md",
+            backgroundColor: "#111827"
+          }
+        }
+      };
+      
+      // ใช้ Share Target Picker
+      if (liff.isApiAvailable('shareTargetPicker')) {
+        liff.shareTargetPicker([flexMessage])
+          .then(res => {
+            if (res && res.status === 'success') {
+              console.log('แชร์สำเร็จแล้ว');
+            } else {
+              console.log('ผู้ใช้ยกเลิกการแชร์');
+            }
+          })
+          .catch(error => {
+            console.error('เกิดข้อผิดพลาดในการแชร์:', error);
+            // ถ้าแชร์ Flex Message ล้มเหลว ให้ใช้ข้อความธรรมดาแทน
+            shareAllCoursesWithText();
+          });
+      } else {
+        // ถ้าใช้ Flex Message ไม่ได้ ให้ใช้ข้อความธรรมดา
+        shareAllCoursesWithText();
+      }
+    }
+    
+    // ฟังก์ชันแชร์คอร์สทั้งหมดด้วยข้อความธรรมดา (สำรอง)
+    function shareAllCoursesWithText() {
+      const currentDate = new Date().toLocaleDateString('th-TH');
+      const shareMessage = `
+🎓 คอร์สเรียนออนไลน์ทั้งหมดจาก "ครบเครื่อง เรื่องไอที"
+
+📅 ข้อมูลวันที่ ${currentDate}
+📊 รวมทั้งหมด ${allCourses.length} คอร์ส
+
+📚 ตัวอย่างคอร์สที่น่าสนใจ:
+${allCourses.slice(0, 5).map((course, index) => 
+  `${index + 1}. ${course.coursename} - ${course.price} ${course.rating ? `(⭐ ${course.rating})` : ''}`
+).join('\n')}
+
+${allCourses.length > 5 ? `...และอีก ${allCourses.length - 5} คอร์ส\n` : ''}
+
+🔗 ดูคอร์สทั้งหมดและสมัครเรียนได้ที่:
+${window.location.href}
+
+📱 ติดต่อสอบถาม: @692ajmyz
+
+#คอร์สออนไลน์ #เรียนออนไลน์ #ครบเครื่องเรื่องไอที
+      `.trim();
+      
+      liff.shareTargetPicker([
+        {
+          type: 'text',
+          text: shareMessage
+        }
+      ])
+      .then(res => {
+        if (res && res.status === 'success') {
+          console.log('แชร์สำเร็จแล้ว');
+        } else {
+          console.log('ผู้ใช้ยกเลิกการแชร์');
+        }
+      })
+      .catch(error => {
+        console.error('เกิดข้อผิดพลาดในการแชร์:', error);
+        alert("ฟังก์ชันแชร์ไม่สามารถใช้งานได้ในขณะนี้");
+      });
+    }
+
+    // ฟังก์ชันกรองคอร์ส
+    function filterCourses() {
+      const searchTerm = document.getElementById('courseSearch').value.toLowerCase();
+      const categoryFilter = document.getElementById('categoryFilter').value;
+      
+      filteredCourses = allCourses.filter(course => {
+        // ตรวจสอบการค้นหา
+        const matchesSearch = searchTerm === '' || 
+          course.coursename.toLowerCase().includes(searchTerm) ||
+          (course.details && course.details.toLowerCase().includes(searchTerm));
+        
+        // ตรวจสอบหมวดหมู่
+        const matchesCategory = categoryFilter === 'all' || 
+          (course.category && course.category === categoryFilter);
+        
+        return matchesSearch && matchesCategory;
+      });
+      
+      // รีเซ็ตไปหน้าแรก
+      currentPage = 1;
+      
+      // อัพเดทจำนวนคอร์ส
+      updateCourseCount();
+      
+      // แสดงคอร์สที่กรองแล้ว
+      if (filteredCourses.length > 0) {
+        document.getElementById('emptyContainer').classList.add('hidden');
+        document.getElementById('card-container').classList.remove('hidden');
+        displayCards(currentPage, filteredCourses);
+        createPagination(filteredCourses);
+      } else {
+        document.getElementById('card-container').classList.add('hidden');
+        document.getElementById('pagination-container').innerHTML = '';
+        document.getElementById('emptyContainer').classList.remove('hidden');
+      }
+    }
+    
+    // อัพเดทจำนวนคอร์สที่แสดง
+    function updateCourseCount() {
+      const totalCourses = filteredCourses.length;
+      const startIndex = (currentPage - 1) * cardsPerPage + 1;
+      const endIndex = Math.min(currentPage * cardsPerPage, totalCourses);
+      
+      if (totalCourses > 0) {
+        document.getElementById('courseCount').textContent = 
+          `แสดง ${startIndex}-${endIndex} จาก ${totalCourses} คอร์ส`;
+      } else {
+        document.getElementById('courseCount').textContent = `ไม่พบคอร์สเรียน`;
+      }
+    }
+    
+    // สร้างการ์ดคอร์ส
+    function displayCards(pageNumber, data) {
+      const cardContainer = document.getElementById('card-container');
+      cardContainer.innerHTML = '';
+
+      const startIndex = (pageNumber - 1) * cardsPerPage;
+      const endIndex = pageNumber * cardsPerPage;
+      const cardsToDisplay = data.slice(startIndex, endIndex);
+
+      cardsToDisplay.forEach((course, index) => {
+        const card = document.createElement('div');
+        card.className = 'bg-gray-800 rounded-xl shadow-lg overflow-hidden card-hover border border-gray-700 flex flex-col h-full';
+        
+        const isNewCourse = index < latestCoursesCount && pageNumber === 1;
+        
+        // จัดรูปแบบรายละเอียด
+        let formattedDetails = '<li class="text-gray-500 italic">ไม่มีรายละเอียดเพิ่มเติม</li>';
+        if (course.details) {
+          const detailsArray = course.details.split('\n').filter(detail => detail.trim() !== '');
+          if (detailsArray.length > 0) {
+            formattedDetails = detailsArray.slice(0, 5).map(detail => 
+              `<li class="flex items-start mb-2">
+                <i class="fas fa-check text-green-500 mt-1 mr-2 text-xs flex-shrink-0"></i>
+                <span class="text-gray-300 text-sm">${detail}</span>
+              </li>`
+            ).join('');
+            
+            if (detailsArray.length > 5) {
+              formattedDetails += '<li class="text-blue-400 text-sm mt-2">ดูเพิ่มเติม...</li>';
+            }
+          }
+        }
+        
+        // สีและข้อความแบดจ์
+        const badgeColor = course.category === 'advanced' ? 'bg-red-900 text-red-200' : 
+                          course.category === 'intermediate' ? 'bg-yellow-900 text-yellow-200' : 
+                          'bg-green-900 text-green-200';
+        
+        const badgeText = course.category === 'advanced' ? 'ขั้นสูง' : 
+                         course.category === 'intermediate' ? 'ปานกลาง' : 
+                         'พื้นฐาน';
+        
+        const actualBadgeColor = course.category ? badgeColor : 'bg-blue-900 text-blue-200';
+        const actualBadgeText = course.category ? badgeText : 'ทั่วไป';
+        
+        // ราคา
+        const priceMatch = course.price ? course.price.match(/\d+/) : null;
+        const coursePrice = priceMatch ? priceMatch[0] : '500';
+        
+        // รูปภาพเริ่มต้นหากไม่มี
+        const courseImage = course.linkimage || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80';
+        
+        card.innerHTML = `
+          <div class="relative course-image-container">
+            ${isNewCourse ? '<div class="new-badge">NEW</div>' : ''}
+            <img src="${courseImage}" class="course-image" alt="${course.coursename}">
+            <div class="absolute top-3 right-3">
+              <span class="${actualBadgeColor} text-xs font-semibold py-1 px-3 rounded-full">${actualBadgeText}</span>
+            </div>
+          </div>
+          <div class="p-6 flex-grow flex flex-col">
+            <h3 class="text-xl font-bold text-white mb-3 line-clamp-2" title="${course.coursename}">${course.coursename}</h3>
+            
+            <div class="course-details-container ${darkMode ? 'dark-scrollbar' : 'light-scrollbar'} mb-4 flex-grow">
+              <ul class="text-gray-300">${formattedDetails}</ul>
+            </div>
+            
+            <div class="flex items-center justify-between mt-4">
+              <div>
+                <span class="text-2xl font-bold text-green-400">${course.price}</span>
+                ${course.originalPrice ? `<span class="text-gray-500 line-through ml-2 text-sm">${course.originalPrice}</span>` : ''}
+              </div>
+              <div class="flex items-center text-yellow-400">
+                <i class="fas fa-star"></i>
+                <span class="ml-1 font-medium">${course.rating || '4.5'}</span>
+              </div>
+            </div>
+            
+            <div class="mt-6 flex flex-col space-y-3">
+              <button onclick="openQRModal('${course.coursename}', '${course.price}', '${courseImage}')" class="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center">
+                <i class="fas fa-qrcode mr-2"></i>สนับสนุนคอร์สนี้
+              </button>
+              <div class="grid grid-cols-2 gap-2">
+                <button onclick="shareCourse(${JSON.stringify(course).replace(/"/g, '&quot;').replace(/'/g, "&#39;")})" class="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-medium py-3 px-2 rounded-lg transition-all duration-300 flex items-center justify-center text-sm">
+                  <i class="fas fa-share-alt mr-2"></i>แชร์
+                </button>
+                <a href="https://line.me/R/oaMessage/@692ajmyz/เลขบัญชี" target="_blank" class="border border-blue-600 text-blue-400 hover:bg-gray-700 font-medium py-3 px-2 rounded-lg transition-all duration-300 flex items-center justify-center text-sm">
+                  <i class="fas fa-receipt mr-2"></i>แจ้งชำระ
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+        cardContainer.appendChild(card);
+      });
+      
+      // อัพเดทจำนวนคอร์ส
+      updateCourseCount();
+    }
+
+    // สร้างเมนูแบ่งหน้า
+    function createPagination(data) {
+      const paginationContainer = document.getElementById('pagination-container');
+      paginationContainer.innerHTML = '';
+      
+      const totalPages = Math.ceil(data.length / cardsPerPage);
+      
+      if (totalPages <= 1) return;
+      
+      const paginationDiv = document.createElement('div');
+      paginationDiv.className = 'flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-2';
+      
+      // ปุ่มก่อนหน้า
+      const prevButton = document.createElement('button');
+      prevButton.innerHTML = `<i class="fas fa-chevron-left mr-1"></i> ก่อนหน้า`;
+      prevButton.className = `flex items-center justify-center h-10 px-4 rounded-lg ${currentPage === 1 ? 'bg-gray-700 text-gray-500 cursor-not-allowed' : 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white shadow'}`;
+      prevButton.disabled = currentPage === 1;
+      prevButton.addEventListener('click', () => {
+        if (currentPage > 1) {
+          currentPage--;
+          displayCards(currentPage, data);
+          createPagination(data);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+      paginationDiv.appendChild(prevButton);
+      
+      // หมายเลขหน้า
+      const pagesContainer = document.createElement('div');
+      pagesContainer.className = 'flex items-center space-x-1';
+      
+      const maxPagesToShow = 5;
+      let startPage = Math.max(currentPage - Math.floor(maxPagesToShow / 2), 1);
+      let endPage = startPage + maxPagesToShow - 1;
+      
+      if (endPage > totalPages) {
+        endPage = totalPages;
+        startPage = Math.max(endPage - maxPagesToShow + 1, 1);
+      }
+      
+      if (startPage > 1) {
+        const firstPageButton = document.createElement('button');
+        firstPageButton.textContent = '1';
+        firstPageButton.className = `flex items-center justify-center h-10 w-10 rounded-lg ${1 === currentPage ? 'bg-blue-700 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white shadow'}`;
+        firstPageButton.addEventListener('click', () => {
+          currentPage = 1;
+          displayCards(currentPage, data);
+          createPagination(data);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        pagesContainer.appendChild(firstPageButton);
+        
+        if (startPage > 2) {
+          const ellipsis = document.createElement('span');
+          ellipsis.textContent = '...';
+          ellipsis.className = 'text-gray-500 px-2';
+          pagesContainer.appendChild(ellipsis);
+        }
+      }
+      
+      for (let i = startPage; i <= endPage; i++) {
+        const pageButton = document.createElement('button');
+        pageButton.textContent = i;
+        pageButton.className = `flex items-center justify-center h-10 w-10 rounded-lg ${i === currentPage ? 'bg-blue-700 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white shadow'}`;
+        pageButton.addEventListener('click', () => {
+          currentPage = i;
+          displayCards(currentPage, data);
+          createPagination(data);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        pagesContainer.appendChild(pageButton);
+      }
+      
+      if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+          const ellipsis = document.createElement('span');
+          ellipsis.textContent = '...';
+          ellipsis.className = 'text-gray-500 px-2';
+          pagesContainer.appendChild(ellipsis);
+        }
+        
+        const lastPageButton = document.createElement('button');
+        lastPageButton.textContent = totalPages;
+        lastPageButton.className = `flex items-center justify-center h-10 w-10 rounded-lg ${totalPages === currentPage ? 'bg-blue-700 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white shadow'}`;
+        lastPageButton.addEventListener('click', () => {
+          currentPage = totalPages;
+          displayCards(currentPage, data);
+          createPagination(data);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        pagesContainer.appendChild(lastPageButton);
+      }
+      
+      paginationDiv.appendChild(pagesContainer);
+      
+      // ปุ่มถัดไป
+      const nextButton = document.createElement('button');
+      nextButton.innerHTML = `ถัดไป <i class="fas fa-chevron-right ml-1"></i>`;
+      nextButton.className = `flex items-center justify-center h-10 px-4 rounded-lg ${currentPage === totalPages ? 'bg-gray-700 text-gray-500 cursor-not-allowed' : 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white shadow'}`;
+      nextButton.disabled = currentPage === totalPages;
+      nextButton.addEventListener('click', () => {
+        if (currentPage < totalPages) {
+          currentPage++;
+          displayCards(currentPage, data);
+          createPagination(data);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+      paginationDiv.appendChild(nextButton);
+      
+      paginationContainer.appendChild(paginationDiv);
+    }
+
+    // ดึงข้อมูลจาก API
+    function fetchDataFromAPI() {
+      // แสดงสถานะกำลังโหลด
+      document.getElementById('loadingContainer').classList.remove('hidden');
+      document.getElementById('emptyContainer').classList.add('hidden');
+      document.getElementById('card-container').classList.add('hidden');
+      
+      fetch('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/exec')
+        .then(response => response.json())
+        .then(data => {
+          // ซ่อนสถานะกำลังโหลด
+          document.getElementById('loadingContainer').classList.add('hidden');
+          
+          const sortedData = data.slice().reverse();
+          allCourses = sortedData;
+          filteredCourses = [...sortedData];
+          
+          // แสดงคอร์ส
+          if (sortedData.length > 0) {
+            document.getElementById('card-container').classList.remove('hidden');
+            displayCards(currentPage, sortedData);
+            createPagination(sortedData);
+            
+            // แสดงปุ่มแชร์ทั้งหมด
+            document.getElementById('shareAllButtonContainer').classList.remove('hidden');
+          } else {
+            document.getElementById('emptyContainer').classList.remove('hidden');
+          }
+        })
+        .catch(error => {
+          console.error('เกิดข้อผิดพลาดในการดึงข้อมูล: ', error);
+          
+          // ซ่อนสถานะกำลังโหลด
+          document.getElementById('loadingContainer').classList.add('hidden');
+          
+          // แสดงข้อความผิดพลาด
+          const cardContainer = document.getElementById('card-container');
+          cardContainer.innerHTML = `
+            <div class="col-span-full text-center py-12">
+              <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-900 text-red-300 mb-4">
+                <i class="fas fa-exclamation-triangle text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-2">ไม่สามารถโหลดข้อมูลได้</h3>
+              <p class="text-gray-400 mb-6">เกิดข้อผิดพลาดในการดึงข้อมูลจากเซิร์ฟเวอร์</p>
+              <button onclick="fetchDataFromAPI()" class="bg-blue-700 hover:bg-blue-600 text-white font-medium py-2 px-6 rounded-lg transition-colors">
+                ลองอีกครั้ง
+              </button>
+            </div>
+          `;
+          document.getElementById('card-container').classList.remove('hidden');
+        });
+    }
+
+    // เปิด Modal QR Code
+    function openQRModal(courseName, coursePrice, courseImage) {
+      currentCourseData = {
+        coursename: courseName,
+        price: coursePrice,
+        linkimage: courseImage
+      };
+      
+      // ดึงราคา
+      const priceMatch = coursePrice ? coursePrice.match(/\d+/) : null;
+      const amount = priceMatch ? priceMatch[0] : '500';
+      
+      // สร้าง URL สำหรับ PromptPay
+      const promptPayUrl = `https://promptpay.io/0835260186/${amount}.png`;
+      
+      // อัพเดทภาพ QR Code
+      document.getElementById('promptpayImage').src = promptPayUrl;
+      
+      // อัพเดทข้อมูลใน modal
+      document.getElementById('modalTitle').textContent = `ชำระเงินสำหรับ: ${courseName}`;
+      document.getElementById('courseNameDetail').textContent = courseName;
+      document.getElementById('paymentAmountDetail').textContent = `${amount} บาท`;
+      
+      // คำนวณเวลาหมดอายุ
+      const now = new Date();
+      const expireTime = new Date(now.getTime() + 5 * 60000);
+      const expireStr = `${expireTime.getHours().toString().padStart(2, '0')}:${expireTime.getMinutes().toString().padStart(2, '0')}`;
+      document.getElementById('expireTimeDetail').textContent = expireStr;
+      
+      // เริ่มนับถอยหลัง
+      startCountdown();
+      
+      // แสดง modal
+      const modal = document.getElementById('qrModal');
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    // เริ่มนับถอยหลัง
+    function startCountdown() {
+      countdownTime = 5 * 60;
+      updateCountdownDisplay();
+      
+      if (countdownTimer) {
+        clearInterval(countdownTimer);
+      }
+      
+      countdownTimer = setInterval(() => {
+        countdownTime--;
+        
+        if (countdownTime <= 0) {
+          clearInterval(countdownTimer);
+          document.getElementById('countdownMinutes').textContent = '00';
+          document.getElementById('countdownSeconds').textContent = '00';
+          document.getElementById('expireTime').textContent = 'หมดเวลาแล้ว';
+          
+          setTimeout(() => {
+            alert('QR Code หมดอายุแล้ว กรุณากดปุ่ม "สนับสนุนคอร์สนี้" อีกครั้งเพื่อสร้าง QR Code ใหม่');
+            closeQRModal();
+          }, 500);
+        } else {
+          updateCountdownDisplay();
+        }
+      }, 1000);
+    }
+
+    // อัพเดทตัวนับถอยหลัง
+    function updateCountdownDisplay() {
+      const minutes = Math.floor(countdownTime / 60);
+      const seconds = countdownTime % 60;
+      
+      document.getElementById('countdownMinutes').textContent = minutes.toString().padStart(2, '0');
+      document.getElementById('countdownSeconds').textContent = seconds.toString().padStart(2, '0');
+      document.getElementById('expireTime').textContent = `${minutes} นาที ${seconds} วินาที`;
+    }
+
+    // ปิด Modal
+    function closeQRModal() {
+      const modal = document.getElementById('qrModal');
+      
+      modal.classList.add('modal-exit');
+      
+      setTimeout(() => {
+        modal.classList.remove('modal-exit');
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+        
+        if (countdownTimer) {
+          clearInterval(countdownTimer);
+        }
+      }, 300);
+    }
+
+    // แจ้งชำระเงิน
+    function confirmPayment() {
+      const courseName = document.getElementById('courseNameDetail').textContent;
+      const amount = document.getElementById('paymentAmountDetail').textContent;
+      
+      const lineMessage = `แจ้งชำระเงินสำหรับคอร์ส: ${courseName}\nจำนวนเงิน: ${amount}\nเวลา: ${new Date().toLocaleTimeString('th-TH')}`;
+      const encodedMessage = encodeURIComponent(lineMessage);
+      
+      // เปิดไลน์เพื่อแจ้งชำระเงิน
+      window.open(`https://line.me/R/oaMessage/@692ajmyz?text=${encodedMessage}`, '_blank');
+      
+      closeQRModal();
+      
+      // แสดงข้อความสำเร็จ
+      alert('ขอบคุณสำหรับการชำระเงิน กรุณาส่งหลักฐานการชำระเงินในแชทไลน์');
+    }
+
+    // สลับโหมดสี
+    function toggleTheme() {
+      darkMode = !darkMode;
+      
+      if (darkMode) {
+        // โหมดมืด
+        document.body.classList.remove('bg-gray-50', 'text-gray-800');
+        document.body.classList.add('bg-gray-900', 'text-gray-100');
+        
+        document.querySelector('nav').classList.remove('bg-gradient-to-r', 'from-blue-600', 'to-purple-600');
+        document.querySelector('nav').classList.add('bg-gradient-to-r', 'from-gray-800', 'to-gray-900', 'border-gray-700');
+        
+        document.querySelector('#qrModal .bg-white').classList.remove('bg-white');
+        document.querySelector('#qrModal .bg-white').classList.add('bg-gray-800');
+        
+        document.querySelector('footer').classList.remove('bg-gray-50', 'text-gray-700');
+        document.querySelector('footer').classList.add('bg-gray-800', 'text-gray-300', 'border-gray-700');
+        
+        document.getElementById('themeIcon').classList.remove('fa-sun');
+        document.getElementById('themeIcon').classList.add('fa-moon');
+        
+        // อัพเดทการแสดงผลการ์ด
+        if (filteredCourses.length > 0) {
+          displayCards(currentPage, filteredCourses);
+          createPagination(filteredCourses);
+        }
+      } else {
+        // โหมดสว่าง
+        document.body.classList.remove('bg-gray-900', 'text-gray-100');
+        document.body.classList.add('bg-gray-50', 'text-gray-800');
+        
+        document.querySelector('nav').classList.remove('bg-gradient-to-r', 'from-gray-800', 'to-gray-900', 'border-gray-700');
+        document.querySelector('nav').classList.add('bg-gradient-to-r', 'from-blue-600', 'to-purple-600');
+        
+        document.querySelector('#qrModal .bg-gray-800').classList.remove('bg-gray-800');
+        document.querySelector('#qrModal .bg-gray-800').classList.add('bg-white');
+        
+        document.querySelector('footer').classList.remove('bg-gray-800', 'text-gray-300', 'border-gray-700');
+        document.querySelector('footer').classList.add('bg-gray-50', 'text-gray-700');
+        
+        document.getElementById('themeIcon').classList.remove('fa-moon');
+        document.getElementById('themeIcon').classList.add('fa-sun');
+        
+        // อัพเดทการแสดงผลการ์ด
+        if (filteredCourses.length > 0) {
+          displayCards(currentPage, filteredCourses);
+          createPagination(filteredCourses);
+        }
+      }
+    }
+
+    // ตั้งค่าเมื่อหน้าเว็บโหลดเสร็จ
+    document.addEventListener('DOMContentLoaded', async function() {
+      // เริ่มต้น LIFF
+      await initializeLiff();
+      
+      // โหลดข้อมูล
+      fetchDataFromAPI();
+      
+      // Event Listeners สำหรับ Modal
+      document.getElementById('closeModal').addEventListener('click', closeQRModal);
+      document.getElementById('modalBackdrop').addEventListener('click', closeQRModal);
+      document.getElementById('confirmPaymentBtn').addEventListener('click', confirmPayment);
+      document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+      document.getElementById('liffLoginButton').addEventListener('click', loginToLine);
+      document.getElementById('shareAllButton').addEventListener('click', shareAllCourses);
+      
+      // ปุ่มแชร์ใน modal
+      document.getElementById('shareCourseButton').addEventListener('click', function() {
+        if (currentCourseData) {
+          shareCourse(currentCourseData);
+          closeQRModal();
+        }
+      });
+      
+      // ค้นหาคอร์ส
+      document.getElementById('courseSearch').addEventListener('input', filterCourses);
+      document.getElementById('categoryFilter').addEventListener('change', filterCourses);
+      
+      // ฟิลเตอร์หมวดหมู่แบบด่วน
+      document.querySelectorAll('.category-filter').forEach(button => {
+        button.addEventListener('click', function() {
+          const category = this.getAttribute('data-category');
+          
+          // อัพเดท dropdown
+          document.getElementById('categoryFilter').value = category;
+          
+          // อัพเดทปุ่ม active
+          document.querySelectorAll('.category-filter').forEach(btn => {
+            if (btn.getAttribute('data-category') === category) {
+              btn.classList.add('active');
+            } else {
+              btn.classList.remove('active');
+            }
+          });
+          
+          // กรองคอร์ส
+          filterCourses();
+        });
+      });
+      
+      // เปลี่ยนจำนวนคอร์สต่อหน้า
+      document.getElementById('itemsPerPageSelect').addEventListener('change', function() {
+        cardsPerPage = parseInt(this.value);
+        currentPage = 1;
+        
+        if (filteredCourses.length > 0) {
+          displayCards(currentPage, filteredCourses);
+          createPagination(filteredCourses);
+        }
+      });
+      
+      // ปิด modal เมื่อกดปุ่ม ESC
+      document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+          closeQRModal();
+        }
+      });
+      
+      // ล็อกเอ้าท์เมื่อคลิกโปรไฟล์
+      const liffProfile = document.getElementById('liffProfile');
+      liffProfile.addEventListener('click', function(e) {
+        if (e.target.closest('#liffProfile')) {
+          if (confirm('ต้องการออกจากระบบใช่หรือไม่?')) {
+            logoutFromLine();
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>
